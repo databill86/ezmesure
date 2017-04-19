@@ -20,6 +20,8 @@ services:
       args:
         - http_proxy
         - https_proxy
+    ports:
+      - 5601:5601
     links:
       - elastic
     environment:
@@ -31,61 +33,61 @@ services:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     restart: unless-stopped
 
-  jwtproxy:
-    build:
-      context: ./jwt-rp
-      args:
-        - http_proxy
-        - https_proxy
-    ports:
-      - 5601:3030
-    environment:
-      - http_proxy
-      - https_proxy
-      - TARGET_URL=http://kibana:5601
-      - JWT_SECRET=${EZMESURE_AUTH_SECRET}
-    links:
-      - kibana
-    restart: unless-stopped
+  # jwtproxy:
+  #   build:
+  #     context: ./jwt-rp
+  #     args:
+  #       - http_proxy
+  #       - https_proxy
+  #   ports:
+  #     - 5601:3030
+  #   environment:
+  #     - http_proxy
+  #     - https_proxy
+  #     - TARGET_URL=http://kibana:5601
+  #     - JWT_SECRET=${EZMESURE_AUTH_SECRET}
+  #   links:
+  #     - kibana
+  #   restart: unless-stopped
 
-  mongodb:
-    image: mongo:3.3.15
-    volumes:
-      - "./data/mongo:/data/db"
-    command: --smallfiles
-    restart: unless-stopped
+  # mongodb:
+  #   image: mongo:3.3.15
+  #   volumes:
+  #     - "./data/mongo:/data/db"
+  #   command: --smallfiles
+  #   restart: unless-stopped
 
-  api:
-    build:
-      context: ./api
-      args:
-        - http_proxy
-        - https_proxy
-    ports:
-      - 3000:3000
-    environment:
-      - http_proxy
-      - https_proxy
-      - EZMESURE_ELASTIC_HOST=elastic
-      - EZMESURE_MONGO_HOST=mongodb
-      - EZMESURE_AUTH_SECRET
-      - NODE_ENV
-    links:
-      - elastic
-      - mongodb
-    restart: unless-stopped
+  # api:
+  #   build:
+  #     context: ./api
+  #     args:
+  #       - http_proxy
+  #       - https_proxy
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #     - http_proxy
+  #     - https_proxy
+  #     - EZMESURE_ELASTIC_HOST=elastic
+  #     - EZMESURE_MONGO_HOST=mongodb
+  #     - EZMESURE_AUTH_SECRET
+  #     - NODE_ENV
+  #   links:
+  #     - elastic
+  #     - mongodb
+  #   restart: unless-stopped
 
-  front:
-    build:
-      context: ./front
-      args:
-        - http_proxy
-        - https_proxy
-    ports:
-      - 8080:8080
-    environment:
-      - EZMESURE_API_URL=/api
-    restart: unless-stopped
+  # front:
+  #   build:
+  #     context: ./front
+  #     args:
+  #       - http_proxy
+  #       - https_proxy
+  #   ports:
+  #     - 8080:8080
+  #   environment:
+  #     - EZMESURE_API_URL=/api
+  #   restart: unless-stopped
 
   rp:
     build:
@@ -94,7 +96,7 @@ services:
         - http_proxy
         - https_proxy
     ports:
-      - 8443:443
+      - 443:443
     environment:
       - http_proxy
       - https_proxy
